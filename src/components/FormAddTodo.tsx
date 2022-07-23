@@ -15,11 +15,13 @@ const FormAddTodo = () => {
                 header: todoHeader,
                 text: todoText
             }))
+            setTodoHeader('')
+            setTodoText('')
         }
     }
 
     return (
-        <form className="w-[760px] m-auto flex flex-col gap-3 pt-5">
+        <form className="max-w-[760px] m-auto flex flex-col gap-3 pt-5">
             <h2 className="font-bold text-4xl text-center">Добавление задачи</h2>
             <div className="flex flex-col justify-start text-2xl gap-1">
                 <label htmlFor="todoHeader">Заголовок задачи: <span className="text-red-600">*</span></label>

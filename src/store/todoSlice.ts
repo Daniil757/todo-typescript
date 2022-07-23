@@ -1,5 +1,7 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
+export const TODO_KEY = 'todos'
+
 // тип одной задачи
 export type Todo = {
     id: number,
@@ -26,14 +28,7 @@ type TodoAdd = {
 const todoSlice = createSlice({
     name: 'todo',
     // исходное состояние списка задач
-    initialState: {todos: [
-            {
-                id: 19237402374,
-                header: 'Первая задача',
-                text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dignissimos dolorum laboriosam neque. Debitis ex illo laboriosam mollitia numquam officia optio?',
-                completed: false
-            }
-        ]} as TodoState,
+    initialState: {todos: []} as TodoState,
     reducers: {
         addTodo(state, action: PayloadAction<TodoAdd>) {
             const newTodo: Todo = {
@@ -42,20 +37,28 @@ const todoSlice = createSlice({
                 text: action.payload.text,
                 completed: false
             }
-            state.todos.push(newTodo)
+            state.todos.unshift(newTodo)
+            localStorage.setItem(TODO_KEY, JSON.stringify(state.todos))
         },
         removeTodo(state, action: PayloadAction<number>) {
             state.todos = state.todos.filter(todo => todo.id !== action.payload)
+            localStorage.setItem(TODO_KEY, JSON.stringify(state.todos))
         },
         changeTodo(state, action: PayloadAction<number>) {
             const toggleTodo = state.todos.find(todo => todo.id === action.payload)
-            if (toggleTodo) toggleTodo.completed = !toggleTodo.completed
+            if (toggleTodo) {
+                toggleTodo.completed = !toggleTodo.completed
+                localStorage.setItem(TODO_KEY, JSON.stringify(state.todos))
+            }
+        },
+        setStateTodo(state, action: PayloadAction<Array<Todo>>) {
+            state.todos = action.payload
         }
     }
 })
 
 // в компоненты
-export const {addTodo, removeTodo, changeTodo} = todoSlice.actions
+export const {addTodo, removeTodo, changeTodo, setStateTodo} = todoSlice.actions
 
 // в store
 export default todoSlice.reducer
